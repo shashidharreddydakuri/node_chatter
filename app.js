@@ -1,14 +1,21 @@
 const express = require('express');
-// const mongoose = require('mongoose');
 
 const app = express();
 
-const PORT = process.env.PORT || 5000;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req,res) => {
-	res.send('hello');
-});
+//Bring in the routes
+app.use("/user", require("./routes/user"));
 
-app.listen(PORT, () => {
-	console.log('Server is listening on Port:', PORT);
-});
+//Setup Error Handlers
+const errorHandlers = require('./handlers/errorHandlers');
+app.use(errorHandlers.notFound);
+app.use(errorHandlers.mongoseErrors);
+if (process.env.ENV === 'DEVELOPMENT') {
+	app.use(errorHandlers.developmentErrors);
+} else {
+	app.use(errorHandlers.productionErrors);
+}
+
+module.exports = app;
