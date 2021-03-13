@@ -5,8 +5,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// app.use(require(‘cors’)());
+
 //Bring in the routes
 app.use("/user", require("./routes/user"));
+
+app.use('/chatroom', require('./routes/chatroom'));
 
 //Setup Error Handlers
 const errorHandlers = require('./handlers/errorHandlers');
@@ -19,3 +23,4 @@ if (process.env.ENV === 'DEVELOPMENT') {
 }
 
 module.exports = app;
+
